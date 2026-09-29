@@ -1,5 +1,6 @@
 package org.ts.orderservice.service;
 
+import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestTemplate;
@@ -22,12 +23,12 @@ public class OrderService {
 
     public OrderService(
             RestTemplate restTemplate,
-            RestClient.Builder restClientBuilder,
+            RestClient restClient,
             WebClient.Builder webClientBuilder,
             ProductFeignClient feignClient
     ) {
         this.restTemplate = restTemplate;
-        this.restClient = restClientBuilder.build();
+        this.restClient = restClient;
         this.webClient = webClientBuilder.build();
         this.feignClient = feignClient;
     }

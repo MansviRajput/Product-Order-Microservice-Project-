@@ -1,8 +1,12 @@
 package org.ts.orderservice.config;
 
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
+import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
+import org.springframework.cloud.client.loadbalancer.LoadBalancerInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -24,10 +28,12 @@ public class HttpClientConfig {
      * RestClient:
      * http://product-service/api/products/1
      */
+    // RestClient built manually, not a RestClient.Builder bean
     @Bean
-    @LoadBalanced
-    public RestClient.Builder restClientBuilder() {
-        return RestClient.builder();
+    public RestClient productRestClient(LoadBalancerClient loadBalancerClient) {
+        return RestClient.builder()
+                .requestInterceptor(new LoadBalancerInterceptor(loadBalancerClient))
+                .build();
     }
 
     /*
